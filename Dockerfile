@@ -1,9 +1,17 @@
-FROM python:3.11
+# Используем официальный образ Python
+FROM python:3.11-slim
 
-COPY requirements.txt .
-RUN pip install -r requirements.txt
-
+# Устанавливаем рабочую директорию
 WORKDIR /app
-COPY src ./src
 
-ENTRYPOINT [ "python", "-m", "src.main" ]
+# Копируем зависимости
+COPY requirements.txt .
+
+# Устанавливаем зависимости
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Копируем весь проект
+COPY . .
+
+# Указываем команду запуска
+CMD ["uvicorn", "src.main:app", "--host", "0.0.0.0", "--port", "8000"]
